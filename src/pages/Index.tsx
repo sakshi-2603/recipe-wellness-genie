@@ -7,26 +7,33 @@ import { getRandomRecipes } from "@/data/recipes";
 import { Recipe } from "@/types/recipe";
 import { motion } from "framer-motion";
 import RecipeCard from "@/components/recipe/RecipeCard";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Smartphone, LayoutDashboard } from "lucide-react";
 
 const Index = () => {
   const [featuredRecipes] = useState<Recipe[]>(getRandomRecipes(3));
+  const isMobile = useIsMobile();
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-primary/20 to-accent/30 py-16 md:py-24">
-        <div className="container px-4 mx-auto text-center">
+      {/* Hero Section - Now with background image */}
+      <section className="relative py-16 md:py-24 bg-cover bg-center" style={{
+        backgroundImage: 'url("https://images.unsplash.com/photo-1505253758473-96b7015fcd40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80")',
+        backgroundBlendMode: 'overlay',
+      }}>
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/60 to-accent/60"></div>
+        <div className="container px-4 mx-auto text-center relative z-10">
           <motion.h1 
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Healthy Recipes <span className="text-primary">Tailored For You</span>
+            Healthy Recipes <span className="text-white">Tailored For You</span>
           </motion.h1>
           
           <motion.p 
-            className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-foreground/80"
+            className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-white"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -47,14 +54,60 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Mobile Dashboard Section - Appears only on mobile */}
+      {isMobile && (
+        <section className="py-6 px-4">
+          <div className="flex justify-between items-center overflow-x-auto pb-4 gap-3">
+            <Card className="w-32 flex-shrink-0 bg-primary/10">
+              <CardContent className="p-3 flex flex-col items-center text-center">
+                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center mb-2">
+                  <Smartphone className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xs font-medium">My Recipes</span>
+              </CardContent>
+            </Card>
+
+            <Card className="w-32 flex-shrink-0 bg-secondary/10">
+              <CardContent className="p-3 flex flex-col items-center text-center">
+                <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center mb-2">
+                  <LayoutDashboard className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xs font-medium">Weekly Plan</span>
+              </CardContent>
+            </Card>
+
+            <Card className="w-32 flex-shrink-0 bg-accent/10">
+              <CardContent className="p-3 flex flex-col items-center text-center">
+                <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center mb-2">
+                  <Smartphone className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xs font-medium">Favorites</span>
+              </CardContent>
+            </Card>
+
+            <Card className="w-32 flex-shrink-0 bg-muted">
+              <CardContent className="p-3 flex flex-col items-center text-center">
+                <div className="w-10 h-10 rounded-full bg-muted-foreground flex items-center justify-center mb-2">
+                  <LayoutDashboard className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xs font-medium">Shopping</span>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      )}
+
+      {/* Features Section - Now with images */}
       <section className="py-16 container px-4 mx-auto">
         <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="bg-card/50 backdrop-blur border-primary/10 shadow-sm">
+          <Card className="bg-card/50 backdrop-blur border-primary/10 shadow-sm overflow-hidden">
+            <div className="h-40 bg-cover bg-center" style={{
+              backgroundImage: 'url("https://images.unsplash.com/photo-1591338579611-3225f8f64e35?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")'
+            }}></div>
             <CardContent className="p-6 flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4 -mt-14 border-4 border-card">
                 <span className="text-2xl font-bold text-primary">1</span>
               </div>
               <h3 className="text-xl font-semibold mb-2">Share Your Preferences</h3>
@@ -64,9 +117,12 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-card/50 backdrop-blur border-primary/10 shadow-sm">
+          <Card className="bg-card/50 backdrop-blur border-primary/10 shadow-sm overflow-hidden">
+            <div className="h-40 bg-cover bg-center" style={{
+              backgroundImage: 'url("https://images.unsplash.com/photo-1542010589005-d1eacc3918f2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")'
+            }}></div>
             <CardContent className="p-6 flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4 -mt-14 border-4 border-card">
                 <span className="text-2xl font-bold text-primary">2</span>
               </div>
               <h3 className="text-xl font-semibold mb-2">Get Personalized Recipes</h3>
@@ -76,9 +132,12 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-card/50 backdrop-blur border-primary/10 shadow-sm">
+          <Card className="bg-card/50 backdrop-blur border-primary/10 shadow-sm overflow-hidden">
+            <div className="h-40 bg-cover bg-center" style={{
+              backgroundImage: 'url("https://images.unsplash.com/photo-1556911220-bff31c812dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")'
+            }}></div>
             <CardContent className="p-6 flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4 -mt-14 border-4 border-card">
                 <span className="text-2xl font-bold text-primary">3</span>
               </div>
               <h3 className="text-xl font-semibold mb-2">Cook & Enjoy</h3>
@@ -90,12 +149,12 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured Recipes Section */}
+      {/* Featured Recipes Section - Now with improved mobile layout */}
       <section className="py-16 bg-muted/50">
         <div className="container px-4 mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Featured Healthy Recipes</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {featuredRecipes.map((recipe) => (
               <RecipeCard key={recipe.id} recipe={recipe} />
             ))}
@@ -108,6 +167,35 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Dashboard Preview Section - Only visible on larger screens */}
+      {!isMobile && (
+        <section className="py-16 container px-4 mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-6">Your Recipe Dashboard</h2>
+          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
+            Track your favorite recipes, plan your meals, and manage your nutrition all in one place
+          </p>
+          
+          <div className="relative mx-auto max-w-4xl">
+            <div className="rounded-xl overflow-hidden shadow-2xl border border-border">
+              <img 
+                src="https://images.unsplash.com/photo-1607083206968-13611e3d76db?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
+                alt="Dashboard Preview" 
+                className="w-full h-auto"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                <div className="p-8 text-white">
+                  <h3 className="text-2xl font-bold mb-2">Personalized Dashboard</h3>
+                  <p className="mb-4">Access all your favorite recipes and meal plans on any device</p>
+                  <Button asChild>
+                    <Link to="/preferences">Start Now</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Footer Section with Legal Disclaimer */}
       <footer className="bg-card py-10">
