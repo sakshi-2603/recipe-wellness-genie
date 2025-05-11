@@ -1,6 +1,6 @@
 
 import { useState, useRef } from "react";
-import { Recipe } from "@/data/recipes";
+import { Recipe } from "@/types/recipe";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";

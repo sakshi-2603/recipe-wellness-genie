@@ -16,6 +16,7 @@ export interface NutritionalInfo {
   vitaminD?: string;
   vitaminC?: string;
   vitaminA?: string;
+  omega3?: string;
 }
 
 export type DietaryPreference = 

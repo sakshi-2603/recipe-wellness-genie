@@ -1,5 +1,4 @@
-
-import { Recipe } from "../types/recipe";
+import { Recipe, UserPreferences, Allergen, DietaryPreference, Deficiency, Cuisine } from "../types/recipe";
 
 export const recipes: Recipe[] = [
   {

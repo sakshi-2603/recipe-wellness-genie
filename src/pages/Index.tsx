@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { getRandomRecipes, Recipe } from "@/data/recipes";
+import { getRandomRecipes } from "@/data/recipes";
+import { Recipe } from "@/types/recipe";
 import { motion } from "framer-motion";
 import RecipeCard from "@/components/recipe/RecipeCard";
 

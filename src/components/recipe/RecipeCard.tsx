@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, UtensilsCrossed } from "lucide-react";
-import { Recipe } from "@/data/recipes";
+import { Recipe } from "@/types/recipe";
 import { Link } from "react-router-dom";
 
 interface RecipeCardProps {

@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import RecipeCard from "@/components/recipe/RecipeCard";
-import { Recipe, filterRecipes } from "@/data/recipes";
-import { UserPreferences } from "@/types/recipe";
+import { Recipe, UserPreferences } from "@/types/recipe";
+import { filterRecipes } from "@/data/recipes";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
 const Results = () => {

@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Recipe, getRecipeById } from "@/data/recipes";
+import { Recipe } from "@/types/recipe";
+import { getRecipeById } from "@/data/recipes";
 import { ArrowLeft, Clock, Download, Printer, Share2, UtensilsCrossed } from "lucide-react";
 import YouTubeTutorial from "@/components/recipe/YouTubeTutorial";
 import ShoppingList from "@/components/recipe/ShoppingList";
@@ -171,7 +172,11 @@ const RecipeDetail = () => {
 
                 <div className="mb-8">
                   <h2 className="text-xl font-semibold mb-4">Video Tutorial</h2>
-                  <YouTubeTutorial searchQuery={recipe.youtube_query || `${recipe.title} recipe`} />
+                  {recipe.youtube_query ? (
+                    <YouTubeTutorial searchQuery={recipe.youtube_query} />
+                  ) : (
+                    <YouTubeTutorial searchQuery={`${recipe.title} recipe`} />
+                  )}
                 </div>
               </>
             ) : (
