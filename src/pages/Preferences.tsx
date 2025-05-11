@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -254,19 +253,19 @@ const Preferences = () => {
             
             <div className="space-y-4">
               <Label htmlFor="age">Age Range</Label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                {["Under 18", "18-30", "31-45", "46-60", "Over 60"].map((range, index) => (
-                  <div key={range} className="flex items-center space-x-2">
-                    <RadioGroupItem 
-                      id={`age-${index}`}
-                      value={`${(index + 1) * 15}`} 
-                      checked={preferences.age === (index + 1) * 15}
-                      onClick={() => handleAgeChange(`${(index + 1) * 15}`)}
-                    />
-                    <Label htmlFor={`age-${index}`}>{range}</Label>
-                  </div>
-                ))}
-              </div>
+              <RadioGroup onValueChange={handleAgeChange}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {["Under 18", "18-30", "31-45", "46-60", "Over 60"].map((range, index) => (
+                    <div key={range} className="flex items-center space-x-2">
+                      <RadioGroupItem 
+                        id={`age-${index}`}
+                        value={`${(index + 1) * 15}`} 
+                      />
+                      <Label htmlFor={`age-${index}`}>{range}</Label>
+                    </div>
+                  ))}
+                </div>
+              </RadioGroup>
             </div>
             
             <Separator />
