@@ -23,6 +23,8 @@ const App = () => (
           <Route path="/preferences" element={<Preferences />} />
           <Route path="/results" element={<Results />} />
           <Route path="/recipe/:id" element={<RecipeDetail />} />
+          <Route path="/saved" element={<NotFound />} />
+          <Route path="/settings" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -8,7 +8,8 @@ import { Recipe } from "@/types/recipe";
 import { motion } from "framer-motion";
 import RecipeCard from "@/components/recipe/RecipeCard";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Smartphone, LayoutDashboard } from "lucide-react";
+import { Smartphone, LayoutDashboard, Bookmark, Settings, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Index = () => {
   const [featuredRecipes] = useState<Recipe[]>(getRandomRecipes(3));
@@ -16,6 +17,33 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Header with Profile, Saved Recipes, and Settings */}
+      <header className="container px-4 mx-auto py-4 flex justify-between items-center">
+        <h1 className="text-xl font-semibold">Healthy Recipes</h1>
+        <div className="flex items-center space-x-4">
+          <Button variant="ghost" size="icon" asChild>
+            <Link to="/saved">
+              <Bookmark className="h-5 w-5" />
+              <span className="sr-only">Saved Recipes</span>
+            </Link>
+          </Button>
+          
+          <Button variant="ghost" size="icon" asChild>
+            <Link to="/settings">
+              <Settings className="h-5 w-5" />
+              <span className="sr-only">Settings</span>
+            </Link>
+          </Button>
+          
+          <Avatar className="cursor-pointer">
+            <AvatarImage src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="User" />
+            <AvatarFallback>
+              <User className="h-5 w-5" />
+            </AvatarFallback>
+          </Avatar>
+        </div>
+      </header>
+
       {/* Hero Section - Now with background image */}
       <section className="relative py-16 md:py-24 bg-cover bg-center" style={{
         backgroundImage: 'url("https://images.unsplash.com/photo-1505253758473-96b7015fcd40?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80")',
@@ -79,7 +107,7 @@ const Index = () => {
             <Card className="w-32 flex-shrink-0 bg-accent/10">
               <CardContent className="p-3 flex flex-col items-center text-center">
                 <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center mb-2">
-                  <Smartphone className="h-5 w-5 text-white" />
+                  <Bookmark className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-xs font-medium">Favorites</span>
               </CardContent>
@@ -88,9 +116,9 @@ const Index = () => {
             <Card className="w-32 flex-shrink-0 bg-muted">
               <CardContent className="p-3 flex flex-col items-center text-center">
                 <div className="w-10 h-10 rounded-full bg-muted-foreground flex items-center justify-center mb-2">
-                  <LayoutDashboard className="h-5 w-5 text-white" />
+                  <User className="h-5 w-5 text-white" />
                 </div>
-                <span className="text-xs font-medium">Shopping</span>
+                <span className="text-xs font-medium">Profile</span>
               </CardContent>
             </Card>
           </div>
