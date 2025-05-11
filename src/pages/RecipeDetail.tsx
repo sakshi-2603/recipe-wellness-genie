@@ -66,6 +66,11 @@ const RecipeDetail = () => {
     }
   };
 
+  // Default image if none provided
+  const recipeImage = recipe.image && recipe.image !== "/placeholder.svg" 
+    ? recipe.image 
+    : "https://images.unsplash.com/photo-1505253758473-96b7015fcd40?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80";
+
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4 max-w-6xl">
@@ -191,7 +196,7 @@ const RecipeDetail = () => {
               <Card className="overflow-hidden mb-6">
                 <div className="aspect-video w-full bg-muted relative">
                   <img
-                    src={recipe.image || "/placeholder.svg"}
+                    src={recipeImage}
                     alt={recipe.title}
                     className="w-full h-full object-cover"
                   />
