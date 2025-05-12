@@ -35,16 +35,8 @@ const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Index />} />
     <Route path="/auth" element={<AuthPage />} />
-    <Route path="/preferences" element={
-      <ProtectedRoute>
-        <Preferences />
-      </ProtectedRoute>
-    } />
-    <Route path="/results" element={
-      <ProtectedRoute>
-        <Results />
-      </ProtectedRoute>
-    } />
+    <Route path="/preferences" element={<Preferences />} />
+    <Route path="/results" element={<Results />} />
     <Route path="/recipe/:id" element={<RecipeDetail />} />
     <Route path="/saved" element={
       <ProtectedRoute>

@@ -5,14 +5,18 @@ import { Button } from "@/components/ui/button";
 import RecipeCard from "@/components/recipe/RecipeCard";
 import { Recipe, UserPreferences } from "@/types/recipe";
 import { filterRecipes } from "@/data/recipes";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, RefreshCw } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!location.state?.preferences) {
@@ -31,6 +35,52 @@ const Results = () => {
       setIsLoading(false);
     }, 1500);
   }, [location.state, navigate]);
+
+  const generateAIRecipes = async () => {
+    if (!preferences) return;
+    
+    setIsGenerating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-recipes', {
+        body: { preferences }
+      });
+      
+      if (error) {
+        console.error("Error generating recipes:", error);
+        toast({
+          title: "Generation Failed",
+          description: "Failed to generate AI recipes. Please try again.",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Merge AI-generated recipes with existing ones
+      if (data && data.recipes && Array.isArray(data.recipes)) {
+        // Add a flag to indicate AI-generated recipes
+        const aiRecipes = data.recipes.map(recipe => ({
+          ...recipe,
+          isAIGenerated: true
+        }));
+        
+        setRecipes(prevRecipes => [...aiRecipes, ...prevRecipes]);
+        
+        toast({
+          title: "Recipes Generated",
+          description: `Successfully generated ${data.recipes.length} new recipes.`,
+        });
+      }
+    } catch (error) {
+      console.error("Error in AI recipe generation:", error);
+      toast({
+        title: "Generation Failed",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const getPreferenceSummary = () => {
     if (!preferences) return "";
@@ -71,12 +121,34 @@ const Results = () => {
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Preferences
         </Button>
 
-        <h1 className="text-3xl font-bold mb-2">Your Personalized Recipes</h1>
-        {preferences && (
-          <p className="text-muted-foreground mb-8">
-            Based on: {getPreferenceSummary()}
-          </p>
-        )}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Your Personalized Recipes</h1>
+            {preferences && (
+              <p className="text-muted-foreground">
+                Based on: {getPreferenceSummary()}
+              </p>
+            )}
+          </div>
+          
+          <Button 
+            onClick={generateAIRecipes} 
+            disabled={isGenerating || isLoading}
+            className="ml-4"
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Generate AI Recipes
+              </>
+            )}
+          </Button>
+        </div>
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20">

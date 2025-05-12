@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,9 +8,11 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Sparkles } from "lucide-react";
 import { UserPreferences, DietaryPreference, Allergen, Deficiency, Cuisine } from "@/types/recipe";
 import { getAllergens, getCuisines, getDeficiencies, getDietaryPreferences } from "@/data/recipes";
+import { supabase } from "@/integrations/supabase/client";
+import Header from "@/components/Header";
 
 const steps = [
   "Dietary Preferences",
@@ -27,6 +30,7 @@ const Preferences = () => {
     deficiencies: [],
     preferred_cuisines: []
   });
+  const [isGenerating, setIsGenerating] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -64,6 +68,52 @@ const Preferences = () => {
     } else {
       // Form completed
       navigate("/results", { state: { preferences } });
+    }
+  };
+
+  const generateAIRecipes = async () => {
+    // Validate essential preferences
+    if (preferences.dietary_preferences.length === 0) {
+      toast({
+        title: "Selection required",
+        description: "Please select at least one dietary preference.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsGenerating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-recipes', {
+        body: { preferences }
+      });
+      
+      if (error) {
+        console.error("Error generating recipes:", error);
+        toast({
+          title: "Generation Failed",
+          description: "Failed to generate AI recipes. Please try again.",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Navigate to results with both preferences and AI-generated recipes
+      navigate("/results", { 
+        state: { 
+          preferences,
+          aiRecipes: data?.recipes || []
+        }
+      });
+    } catch (error) {
+      console.error("Error in AI recipe generation:", error);
+      toast({
+        title: "Generation Failed",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -324,6 +374,7 @@ const Preferences = () => {
 
   return (
     <div className="min-h-screen bg-background py-8 md:py-12">
+      <Header />
       <div className="container mx-auto px-4">
         <Card className="max-w-4xl mx-auto">
           <CardHeader>
@@ -345,24 +396,36 @@ const Preferences = () => {
             {renderStepContent()}
           </CardContent>
           
-          <CardFooter className="flex justify-between">
+          <CardFooter className="flex flex-wrap justify-between gap-3">
             <Button variant="outline" onClick={handlePrevious}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               {currentStep === 0 ? "Back to Home" : "Previous"}
             </Button>
-            <Button onClick={handleNext}>
-              {currentStep < steps.length - 1 ? (
-                <>
-                  Next
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </>
-              ) : (
-                <>
-                  Generate Recipes
-                  <Check className="ml-2 h-4 w-4" />
-                </>
-              )}
-            </Button>
+            
+            <div className="flex gap-3">
+              <Button 
+                variant="secondary" 
+                onClick={generateAIRecipes} 
+                disabled={isGenerating || preferences.dietary_preferences.length === 0}
+              >
+                <Sparkles className="mr-2 h-4 w-4" />
+                Generate AI Recipes
+              </Button>
+              
+              <Button onClick={handleNext}>
+                {currentStep < steps.length - 1 ? (
+                  <>
+                    Next
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                ) : (
+                  <>
+                    Generate Recipes
+                    <Check className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </div>
           </CardFooter>
         </Card>
       </div>
