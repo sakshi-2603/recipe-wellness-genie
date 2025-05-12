@@ -9,40 +9,18 @@ import { motion } from "framer-motion";
 import RecipeCard from "@/components/recipe/RecipeCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Smartphone, LayoutDashboard, Bookmark, Settings, User } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Header from "@/components/Header";
+import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
   const [featuredRecipes] = useState<Recipe[]>(getRandomRecipes(3));
   const isMobile = useIsMobile();
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header with Profile, Saved Recipes, and Settings */}
-      <header className="container px-4 mx-auto py-4 flex justify-between items-center">
-        <h1 className="text-xl font-semibold">Healthy Recipes</h1>
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link to="/saved">
-              <Bookmark className="h-5 w-5" />
-              <span className="sr-only">Saved Recipes</span>
-            </Link>
-          </Button>
-          
-          <Button variant="ghost" size="icon" asChild>
-            <Link to="/settings">
-              <Settings className="h-5 w-5" />
-              <span className="sr-only">Settings</span>
-            </Link>
-          </Button>
-          
-          <Avatar className="cursor-pointer">
-            <AvatarImage src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="User" />
-            <AvatarFallback>
-              <User className="h-5 w-5" />
-            </AvatarFallback>
-          </Avatar>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section - Now with background image */}
       <section className="relative py-16 md:py-24 bg-cover bg-center" style={{
@@ -76,7 +54,9 @@ const Index = () => {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <Button asChild size="lg" className="text-lg px-8 py-6">
-              <Link to="/preferences">Get Started</Link>
+              <Link to={user ? "/preferences" : "/auth"}>
+                {user ? "Get Started" : "Sign In to Get Started"}
+              </Link>
             </Button>
           </motion.div>
         </div>
@@ -190,7 +170,9 @@ const Index = () => {
           
           <div className="text-center mt-12">
             <Button asChild variant="outline" size="lg">
-              <Link to="/preferences">Find Your Perfect Recipe</Link>
+              <Link to={user ? "/preferences" : "/auth"}>
+                {user ? "Find Your Perfect Recipe" : "Sign In to Find Recipes"}
+              </Link>
             </Button>
           </div>
         </div>
@@ -216,7 +198,9 @@ const Index = () => {
                   <h3 className="text-2xl font-bold mb-2">Personalized Dashboard</h3>
                   <p className="mb-4">Access all your favorite recipes and meal plans on any device</p>
                   <Button asChild>
-                    <Link to="/preferences">Start Now</Link>
+                    <Link to={user ? "/preferences" : "/auth"}>
+                      {user ? "Start Now" : "Sign In to Start"}
+                    </Link>
                   </Button>
                 </div>
               </div>
