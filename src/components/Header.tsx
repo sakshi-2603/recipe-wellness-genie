@@ -27,6 +27,11 @@ const Header = () => {
     }
   };
   
+  const handleNavigation = (e, path) => {
+    e.preventDefault();
+    navigate(path);
+  };
+  
   return (
     <header className="container px-4 mx-auto py-4 flex justify-between items-center">
       <h1 className="text-xl font-semibold">
@@ -37,18 +42,14 @@ const Header = () => {
       <div className="flex items-center space-x-4">
         {user ? (
           <>
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/saved">
-                <Bookmark className="h-5 w-5" />
-                <span className="sr-only">Saved Recipes</span>
-              </Link>
+            <Button variant="ghost" size="icon" onClick={(e) => handleNavigation(e, "/saved")}>
+              <Bookmark className="h-5 w-5" />
+              <span className="sr-only">Saved Recipes</span>
             </Button>
             
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/settings">
-                <Settings className="h-5 w-5" />
-                <span className="sr-only">Settings</span>
-              </Link>
+            <Button variant="ghost" size="icon" onClick={(e) => handleNavigation(e, "/settings")}>
+              <Settings className="h-5 w-5" />
+              <span className="sr-only">Settings</span>
             </Button>
             
             <DropdownMenu>
@@ -65,11 +66,11 @@ const Header = () => {
                   <p className="font-medium">{user.email}</p>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/settings" className="cursor-pointer flex w-full">Settings</Link>
+                <DropdownMenuItem onClick={(e) => handleNavigation(e, "/settings")} className="cursor-pointer">
+                  Settings
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/saved" className="cursor-pointer flex w-full">Saved Recipes</Link>
+                <DropdownMenuItem onClick={(e) => handleNavigation(e, "/saved")} className="cursor-pointer">
+                  Saved Recipes
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-500">
@@ -80,8 +81,8 @@ const Header = () => {
             </DropdownMenu>
           </>
         ) : (
-          <Button asChild variant="default">
-            <Link to="/auth">Sign In</Link>
+          <Button onClick={(e) => handleNavigation(e, "/auth")} variant="default">
+            Sign In
           </Button>
         )}
       </div>

@@ -12,7 +12,8 @@ const Settings = () => {
   const [notifications, setNotifications] = useState<boolean>(true);
   const navigate = useNavigate();
   
-  const toggleNotifications = () => {
+  const toggleNotifications = (e) => {
+    e.preventDefault();
     setNotifications(!notifications);
     toast.success(`Notifications ${!notifications ? 'enabled' : 'disabled'}`);
   };
