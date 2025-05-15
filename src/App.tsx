@@ -11,6 +11,8 @@ import Results from "./pages/Results";
 import RecipeDetail from "./pages/RecipeDetail";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/Auth";
+import Settings from "./pages/Settings";
+import SavedRecipes from "./pages/SavedRecipes";
 
 const queryClient = new QueryClient();
 
@@ -40,12 +42,12 @@ const AppRoutes = () => (
     <Route path="/recipe/:id" element={<RecipeDetail />} />
     <Route path="/saved" element={
       <ProtectedRoute>
-        <NotFound />
+        <SavedRecipes />
       </ProtectedRoute>
     } />
     <Route path="/settings" element={
       <ProtectedRoute>
-        <NotFound />
+        <Settings />
       </ProtectedRoute>
     } />
     <Route path="*" element={<NotFound />} />
