@@ -14,7 +14,14 @@ import AuthPage from "./pages/Auth";
 import Settings from "./pages/Settings";
 import SavedRecipes from "./pages/SavedRecipes";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,
+      retry: false,
+    },
+  },
+});
 
 // Protected route component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {

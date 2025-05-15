@@ -18,6 +18,10 @@ const Settings = () => {
     toast.success(`Notifications ${!notifications ? 'enabled' : 'disabled'}`);
   };
 
+  const navigateTo = (path) => {
+    navigate(path);
+  };
+
   return (
     <div className="min-h-screen bg-muted/30">
       <Header />

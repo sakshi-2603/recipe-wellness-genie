@@ -13,7 +13,7 @@ const SavedRecipes = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignOut = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setIsLoading(true);
     try {
       await signOut();
@@ -25,13 +25,17 @@ const SavedRecipes = () => {
     }
   };
 
+  const navigateTo = (path) => {
+    navigate(path);
+  };
+
   const goToSettings = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     navigate("/settings");
   };
 
   const goToHome = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     navigate("/");
   };
 

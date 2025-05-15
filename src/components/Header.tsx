@@ -18,7 +18,7 @@ const Header = () => {
   const navigate = useNavigate();
   
   const handleSignOut = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     try {
       await signOut();
       navigate("/");
@@ -28,14 +28,14 @@ const Header = () => {
   };
   
   const handleNavigation = (e, path) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     navigate(path);
   };
   
   return (
     <header className="container px-4 mx-auto py-4 flex justify-between items-center">
       <h1 className="text-xl font-semibold">
-        <Link to="/" className="hover:opacity-80 transition-opacity">
+        <Link to="/" onClick={(e) => handleNavigation(e, "/")} className="hover:opacity-80 transition-opacity">
           Healthy Recipes
         </Link>
       </h1>
@@ -55,7 +55,7 @@ const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src={user.user_metadata.avatar_url || ""} alt={user.email || "User"} />
+                  <AvatarImage src={user.user_metadata?.avatar_url || ""} alt={user.email || "User"} />
                   <AvatarFallback>
                     <User className="h-5 w-5" />
                   </AvatarFallback>
