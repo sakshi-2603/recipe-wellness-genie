@@ -12,7 +12,8 @@ const SavedRecipes = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSignOut = async () => {
+  const handleSignOut = async (e) => {
+    e.preventDefault();
     setIsLoading(true);
     try {
       await signOut();
@@ -24,8 +25,14 @@ const SavedRecipes = () => {
     }
   };
 
-  const goToSettings = () => {
+  const goToSettings = (e) => {
+    e.preventDefault();
     navigate("/settings");
+  };
+
+  const goToHome = (e) => {
+    e.preventDefault();
+    navigate("/");
   };
 
   return (
@@ -86,7 +93,7 @@ const SavedRecipes = () => {
                 <p className="text-muted-foreground">You don't have any saved recipes yet.</p>
                 <Button 
                   variant="link"
-                  onClick={() => navigate("/")} 
+                  onClick={goToHome}
                   className="mt-2"
                 >
                   Browse recipes

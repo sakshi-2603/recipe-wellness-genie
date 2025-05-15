@@ -11,9 +11,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  
+  const handleSignOut = async (e) => {
+    e.preventDefault();
+    try {
+      await signOut();
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
   
   return (
     <header className="container px-4 mx-auto py-4 flex justify-between items-center">
@@ -60,7 +72,7 @@ const Header = () => {
                   <Link to="/saved" className="cursor-pointer flex w-full">Saved Recipes</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={signOut} className="cursor-pointer text-red-500">
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-500">
                   <LogOut className="h-4 w-4 mr-2" />
                   Sign Out
                 </DropdownMenuItem>

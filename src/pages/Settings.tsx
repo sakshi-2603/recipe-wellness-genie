@@ -5,10 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const { user } = useAuth();
   const [notifications, setNotifications] = useState<boolean>(true);
+  const navigate = useNavigate();
   
   const toggleNotifications = () => {
     setNotifications(!notifications);
