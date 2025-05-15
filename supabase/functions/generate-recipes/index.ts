@@ -1,7 +1,80 @@
 
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { UserPreferences } from "../../src/types/recipe.ts";
+
+// Define types directly in the edge function instead of importing
+interface Ingredient {
+  name: string;
+  quantity: string;
+  unit?: string;
+}
+
+interface NutritionalInfo {
+  calories: number;
+  protein?: string;
+  carbs?: string;
+  fat?: string;
+  fiber?: string;
+  iron?: string;
+  calcium?: string;
+  vitaminD?: string;
+  vitaminC?: string;
+  vitaminA?: string;
+  omega3?: string;
+}
+
+type DietaryPreference = 
+  | "vegetarian"
+  | "vegan"
+  | "pescatarian"
+  | "keto"
+  | "paleo"
+  | "gluten-free"
+  | "dairy-free"
+  | "low-carb"
+  | "high-protein";
+
+type Allergen = 
+  | "nuts"
+  | "dairy"
+  | "gluten"
+  | "soy"
+  | "eggs"
+  | "fish"
+  | "shellfish"
+  | "wheat";
+
+type Deficiency = 
+  | "iron"
+  | "calcium"
+  | "vitaminD"
+  | "vitaminC"
+  | "vitaminA"
+  | "fiber"
+  | "protein"
+  | "omega3";
+
+type Cuisine = 
+  | "italian"
+  | "mexican"
+  | "asian"
+  | "mediterranean"
+  | "american"
+  | "indian"
+  | "french"
+  | "thai"
+  | "japanese"
+  | "greek";
+
+interface UserPreferences {
+  dietary_preferences: DietaryPreference[];
+  allergies: Allergen[];
+  deficiencies: Deficiency[];
+  preferred_cuisines: Cuisine[];
+  age?: number;
+  gender?: "male" | "female" | "other";
+  activity_level?: "sedentary" | "moderate" | "active" | "very_active";
+}
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
