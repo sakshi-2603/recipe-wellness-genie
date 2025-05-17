@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import RecipeCard from "@/components/recipe/RecipeCard";
 import { Recipe, UserPreferences } from "@/types/recipe";
 import { filterRecipes } from "@/data/recipes";
-import { ArrowLeft, Loader2, RefreshCw } from "lucide-react";
+import { ArrowLeft, Loader2, RefreshCw, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -16,6 +16,7 @@ const Results = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
+  const [fallbackMode, setFallbackMode] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -55,6 +56,15 @@ const Results = () => {
         return;
       }
       
+      // Check if we're using fallback recipes
+      if (data && data.fallback) {
+        setFallbackMode(true);
+        toast({
+          title: "Using Fallback Recipes",
+          description: "AI generation is currently unavailable. Using pre-defined recipes instead.",
+        });
+      }
+      
       // Merge AI-generated recipes with existing ones
       if (data && data.recipes && Array.isArray(data.recipes)) {
         // Add a flag to indicate AI-generated recipes
@@ -65,10 +75,12 @@ const Results = () => {
         
         setRecipes(prevRecipes => [...aiRecipes, ...prevRecipes]);
         
-        toast({
-          title: "Recipes Generated",
-          description: `Successfully generated ${data.recipes.length} new recipes.`,
-        });
+        if (!data.fallback) {
+          toast({
+            title: "Recipes Generated",
+            description: `Successfully generated ${data.recipes.length} new recipes.`,
+          });
+        }
       }
     } catch (error) {
       console.error("Error in AI recipe generation:", error);
@@ -77,6 +89,7 @@ const Results = () => {
         description: "Something went wrong. Please try again later.",
         variant: "destructive"
       });
+      setFallbackMode(true);
     } finally {
       setIsGenerating(false);
     }
@@ -149,6 +162,17 @@ const Results = () => {
             )}
           </Button>
         </div>
+
+        {fallbackMode && (
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+            <div className="flex">
+              <AlertTriangle className="h-6 w-6 text-yellow-500 mr-3" />
+              <p className="text-sm text-yellow-700">
+                Our AI recipe generation is currently limited. Showing pre-defined recipes that match your preferences.
+              </p>
+            </div>
+          </div>
+        )}
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20">
