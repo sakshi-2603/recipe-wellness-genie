@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -261,7 +260,55 @@ serve(async (req) => {
   }
 
   try {
-    const { preferences } = await req.json();
+    const { preferences, testMode } = await req.json();
+    
+    // If in test mode, just verify the API key without generating full recipes
+    if (testMode) {
+      // Check if we have a key configured
+      if (!openAIApiKey) {
+        return new Response(JSON.stringify({ 
+          apiKeyStatus: "invalid",
+          message: "OpenAI API key is not configured", 
+          fallback: true 
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      // Verify the key works by making a simple request
+      try {
+        const response = await fetch('https://api.openai.com/v1/models', {
+          headers: {
+            'Authorization': `Bearer ${openAIApiKey}`,
+          },
+        });
+        
+        if (response.status === 200) {
+          return new Response(JSON.stringify({ 
+            apiKeyStatus: "valid",
+            message: "OpenAI API key is valid"
+          }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        } else {
+          return new Response(JSON.stringify({ 
+            apiKeyStatus: "invalid",
+            message: "OpenAI API key is invalid or has insufficient permissions", 
+            fallback: true 
+          }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+      } catch (error) {
+        return new Response(JSON.stringify({ 
+          apiKeyStatus: "invalid",
+          message: "Error verifying OpenAI API key: " + error.message, 
+          fallback: true 
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
     
     // Try OpenAI API first
     try {
