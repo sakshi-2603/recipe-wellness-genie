@@ -55,9 +55,9 @@ const AuthPage = () => {
   };
 
   const onRegister = async (values: FormValues) => {
-    const { error } = await signUp(values.email, values.password);
+    const { error, needsVerification } = await signUp(values.email, values.password);
     if (!error) {
-      // Stay on auth page and switch to login tab
+      // Switch to login tab after successful registration
       setActiveTab("login");
       registerForm.reset();
     }

@@ -8,7 +8,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  signUp: (email: string, password: string) => Promise<{ error: any | null }>;
+  signUp: (email: string, password: string) => Promise<{ error: any | null; needsVerification?: boolean }>;
   signIn: (email: string, password: string) => Promise<{ error: any | null }>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -74,11 +74,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           title: "Registration successful",
           description: "Please check your email for verification instructions before signing in.",
         });
+        return { error: null, needsVerification: true };
       } else if (data.session) {
         toast({
           title: "Registration successful",
           description: "Welcome! You're now signed in.",
         });
+        return { error: null, needsVerification: false };
       }
       
       return { error: null };
