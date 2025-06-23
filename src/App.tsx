@@ -23,7 +23,7 @@ const queryClient = new QueryClient({
   },
 });
 
-// Protected route component
+// Protected route component for all authenticated pages
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading } = useAuth();
   
@@ -42,11 +42,27 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
 const AppRoutes = () => (
   <Routes>
-    <Route path="/" element={<Index />} />
     <Route path="/auth" element={<AuthPage />} />
-    <Route path="/preferences" element={<Preferences />} />
-    <Route path="/results" element={<Results />} />
-    <Route path="/recipe/:id" element={<RecipeDetail />} />
+    <Route path="/" element={
+      <ProtectedRoute>
+        <Index />
+      </ProtectedRoute>
+    } />
+    <Route path="/preferences" element={
+      <ProtectedRoute>
+        <Preferences />
+      </ProtectedRoute>
+    } />
+    <Route path="/results" element={
+      <ProtectedRoute>
+        <Results />
+      </ProtectedRoute>
+    } />
+    <Route path="/recipe/:id" element={
+      <ProtectedRoute>
+        <RecipeDetail />
+      </ProtectedRoute>
+    } />
     <Route path="/saved" element={
       <ProtectedRoute>
         <SavedRecipes />
