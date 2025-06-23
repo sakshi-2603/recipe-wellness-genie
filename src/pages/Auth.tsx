@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -44,19 +43,25 @@ const AuthPage = () => {
 
   // If user is already logged in, redirect to home
   if (user && !isLoading) {
-    return <Navigate to="/" />;
+    return <Navigate to="/" replace />;
   }
 
   const onLogin = async (values: FormValues) => {
+    console.log("Attempting login...");
     const { error } = await signIn(values.email, values.password);
+    console.log("Login result:", { error });
     if (!error) {
-      navigate("/");
+      console.log("Login successful, navigating to home");
+      navigate("/", { replace: true });
     }
   };
 
   const onRegister = async (values: FormValues) => {
+    console.log("Attempting registration...");
     const { error, needsVerification } = await signUp(values.email, values.password);
+    console.log("Registration result:", { error, needsVerification });
     if (!error) {
+      console.log("Registration successful, switching to login tab");
       // Switch to login tab after successful registration
       setActiveTab("login");
       registerForm.reset();
