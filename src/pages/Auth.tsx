@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,6 +26,7 @@ const AuthPage = () => {
   const { user, signIn, signUp, signInWithGoogle, isLoading } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState("login");
   
   const loginForm = useForm<FormValues>({
     defaultValues: {
@@ -56,7 +57,9 @@ const AuthPage = () => {
   const onRegister = async (values: FormValues) => {
     const { error } = await signUp(values.email, values.password);
     if (!error) {
-      // Stay on the page, as the user likely needs to verify their email
+      // Stay on auth page and switch to login tab
+      setActiveTab("login");
+      registerForm.reset();
     }
   };
 
@@ -80,7 +83,7 @@ const AuthPage = () => {
           <CardDescription>Sign in to access your personalized recipes</CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="login" className="w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-8">
               <TabsTrigger value="login">Login</TabsTrigger>
               <TabsTrigger value="register">Register</TabsTrigger>
