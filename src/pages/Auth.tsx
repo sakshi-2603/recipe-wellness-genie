@@ -58,13 +58,15 @@ const AuthPage = () => {
 
   const onRegister = async (values: FormValues) => {
     console.log("Attempting registration...");
-    const { error, needsVerification } = await signUp(values.email, values.password);
-    console.log("Registration result:", { error, needsVerification });
+    const { error } = await signUp(values.email, values.password);
+    console.log("Registration result:", { error });
     if (!error) {
       console.log("Registration successful, switching to login tab");
-      // Switch to login tab after successful registration
+      // Switch to login tab after successful registration and clear form
       setActiveTab("login");
       registerForm.reset();
+      // Pre-fill the login form with the registered email
+      loginForm.setValue("email", values.email);
     }
   };
 

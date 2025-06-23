@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -72,24 +71,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error };
       }
       
-      // Check if user needs email confirmation
-      if (data.user && !data.session) {
-        console.log('User needs email confirmation');
-        toast({
-          title: "Registration successful",
-          description: "Please check your email for verification instructions before signing in.",
-        });
-        return { error: null, needsVerification: true };
-      } else if (data.session) {
-        console.log('User signed up and logged in automatically');
-        toast({
-          title: "Registration successful",
-          description: "Welcome! You're now signed in.",
-        });
-        return { error: null, needsVerification: false };
-      }
-      
-      return { error: null };
+      // Always treat signup as requiring verification - don't auto-login
+      console.log('User registered, switching to login');
+      toast({
+        title: "Registration successful",
+        description: "You can now sign in with your credentials.",
+      });
+      return { error: null, needsVerification: false };
     } catch (error: any) {
       console.error('Sign up catch error:', error);
       toast({
@@ -107,11 +95,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
         console.error('Sign in error:', error);
-        toast({
-          title: "Login failed",
-          description: error.message,
-          variant: "destructive",
-        });
+        // Check if it's an invalid credentials error (user not found)
+        if (error.message.includes('Invalid login credentials') || error.message.includes('Email not confirmed')) {
+          toast({
+            title: "Login failed",
+            description: "Invalid email or password. Please check your credentials or sign up if you don't have an account.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Login failed",
+            description: error.message,
+            variant: "destructive",
+          });
+        }
         return { error };
       }
       
